@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<head></head>
+<body>
+
+<script src="https://apis.google.com/js/api.js"></script>
+<script>
+  /**
+   * Sample JavaScript code for sheets.spreadsheets.values.get
+   * See instructions for running APIs Explorer code samples locally:
+   * https://developers.google.com/explorer-help/guides/code_samples#javascript
+   */
+
+  function authenticate() {
+    return gapi.auth2.getAuthInstance()
+        .signIn({scope: "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/spreadsheets.readonly"})
+        .then(function() { console.log("Sign-in successful"); },
+              function(err) { console.error("Error signing in", err); });
+  }
+  function loadClient() {
+    gapi.client.setApiKey("AIzaSyAdxIgK1h3dwu8Df5-4I33tLmgpIkcZwvg");
+    return gapi.client.load("https://sheets.googleapis.com/$discovery/rest?version=v4")
+        .then(function() { console.log("GAPI client loaded for API"); },
+              function(err) { console.error("Error loading GAPI client for API", err); });
+  }
+  // Make sure the client is loaded and sign-in is complete before calling this method.
+  function execute(range) {
+    return gapi.client.sheets.spreadsheets.values.get({
+      "spreadsheetId": "1i-gvq2IYugv2U3hMoFRMj7i0Sm3KVFMyjl-k_KkO6pA",
+      "range": "Sheet1!"+range,
+    })
+        .then(function(response) {
+                // Handle the results here (response.result has the parsed body).
+                console.log("Response", response);
+                return response.result;
+              },
+              function(err) { console.error("Execute error", err); });
+  }
+
+  gapi.load("client:auth2", function() {
+    gapi.auth2.init({client_id: "240158863715-ugjdp02usdreb2a935dlfkmp7da4mfeu.apps.googleusercontent.com"});
+  });
+  //
+  // REAL CODE HERE vvvvv
+  //
+  //
+  //
+  function getval() {
+    var range = window.prompt("range");
+    var obj = execute(range);
+    var str = JSON.stringify(obj);
+    window.alert(str);
+    //
+  }
+
+  function getcol(row, num) {
+	var array = row.split(',');
+    var str = array[num].slice(1,-1);
+    return str;
+}
+function getcollength(row) {
+	var array = row.split(',');
+    return array.length;
+}
+function cleanjson(str, range) {
+	str = str.replace('{"range":"Sheet1!"+'+range+',"majorDimension":"ROWS","values":','');
+	str = str.replace(']]}','');
+	str = str.replace('[','');
+	str = str.replace('[','');
+	return str;
+}
+
+
+
+
+</script>
+<button onclick="authenticate().then(loadClient)">authorize and load</button>
+<button onclick="getval()">execute</button>
+
+</body>
+
+</html>
